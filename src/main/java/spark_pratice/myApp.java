@@ -314,9 +314,9 @@ public class myApp
 			col("e_emp_no").equalTo(col("emp_no"))
 		).select(
 			col("salary"),
-			expr("DATEDIFF(CURRENT_DATE(),hire_date) as seniority").cast("decimal(38,4)"),
-			expr("DATEDIFF(CURRENT_DATE(),birth_date) as age").cast("decimal(38,4)"),
-			expr("IF(gender='M',0,1) as gender").cast("decimal(38,4)")
+			expr("DATEDIFF(CURRENT_DATE(),hire_date) as seniority"),
+			expr("DATEDIFF(CURRENT_DATE(),birth_date) as age"),
+			expr("IF(gender='M',0,1) as gender")
 		);
 
 		Encoder<Related_Data> related_dataEncoder = Encoders.bean(Related_Data.class);
@@ -329,9 +329,10 @@ public class myApp
 
 		TypedColumn<Related_Data, Double> cc = correlation_coefficient.toColumn();
 
-		Dataset<Double> result_ss = ss.select(cc.name("c_ss"));
-		Dataset<Double> result_sa = sa.select(cc.name("c_sa"));
-		Dataset<Double> result_sg = sg.select(cc.name("c_sg"));
+		Dataset<Row> result_ss = ss.select(cc.name("c_ss")).selectExpr("'join_col'","c_ss");
+		Dataset<Row> result_sa = sa.select(cc.name("c_sa")).selectExpr("'join_col'","c_sa");;
+		Dataset<Row> result_sg = sg.select(cc.name("c_sg")).selectExpr("'join_col'","c_sg");;
+		
 
 		result_ss.show();
 
