@@ -98,12 +98,8 @@ public class myApp
 			.selectExpr("title as m_title","Median");
 
 		Dataset<Row> summary_of_salaries = 
-			latest_salaries.selectExpr("emp_no as ls_emp_no","salary")
-			.join(
-				titles,
-				col("ls_emp_no").equalTo(col("emp_no")),
-				"INNER"
-			).groupBy("title")
+			latest_salaries_with_titles
+			.groupBy("title")
 			.agg(
 				expr("AVG(salary)").cast("decimal(38,2)").alias("AVG"),
 				expr("STD(salary)").cast("decimal(38,2)").alias("STD"),
@@ -113,6 +109,7 @@ public class myApp
 				median_of_salaries,
 				col("title").equalTo(col("m_title"))
 			);
+			
 		summary_of_salaries
 		.selectExpr("title","AVG","Median","STD","VAR");//.coalesce(1).write().csv("/home/ubuntu/hero_xu/data/csv/Q2");
 
